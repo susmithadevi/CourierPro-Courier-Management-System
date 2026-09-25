@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CourierPro - Courier Management System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="toastContainer"></div>
+
+  <div id="loginScreen" class="login-screen">
+    <div class="login-card">
+      <div class="login-logo"><i class="fa-solid fa-box"></i></div>
+      <h1>CourierPro</h1>
+      <p>Courier Management System</p>
+      <form id="loginForm">
+        <label>Email</label>
+        <input id="loginEmail" type="email" value="admin@courierpro.com" required>
+        <label>Password</label>
+        <input id="loginPassword" type="password" value="admin123" required>
+        <button class="btn btn-primary full" type="submit"><i class="fa-solid fa-right-to-bracket"></i> Login</button>
+      </form>
+      <small>Demo login: admin@courierpro.com / admin123</small>
+    </div>
+  </div>
+
+  <div id="app" class="app hidden">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-icon"><i class="fa-solid fa-box"></i></div>
+        <div><strong>CourierPro</strong><span>Management System</span></div>
+      </div>
+      <nav>
+        <button class="nav-item active" data-section="dashboard"><i class="fa-solid fa-chart-pie"></i><span>Dashboard</span></button>
+        <button class="nav-item" data-section="bookings"><i class="fa-solid fa-box-open"></i><span>Bookings</span></button>
+        <button class="nav-item" data-section="tracking"><i class="fa-solid fa-location-dot"></i><span>Track Shipment</span></button>
+        <button class="nav-item" data-section="personnel"><i class="fa-solid fa-motorcycle"></i><span>Personnel</span></button>
+        <button class="nav-item" data-section="routes"><i class="fa-solid fa-route"></i><span>Routes</span></button>
+        <button class="nav-item" data-section="billing"><i class="fa-solid fa-file-invoice-dollar"></i><span>Billing</span></button>
+        <button class="nav-item" data-section="customers"><i class="fa-solid fa-users"></i><span>Customers</span></button>
+        <button class="nav-item" data-section="reports"><i class="fa-solid fa-chart-column"></i><span>Reports</span></button>
+      </nav>
+      <div class="sidebar-bottom">
+        <button class="nav-item" id="darkModeBtn"><i class="fa-solid fa-moon"></i><span>Dark Mode</span></button>
+        <button class="nav-item logout" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="icon-btn mobile-menu" id="menuBtn"><i class="fa-solid fa-bars"></i></button>
+        <div>
+          <h2 id="pageTitle">Dashboard</h2>
+          <p id="pageSubtitle">Welcome back! Here's today's overview.</p>
+        </div>
+        <div class="top-actions">
+          <button class="icon-btn" id="notificationBtn"><i class="fa-regular fa-bell"></i><b id="notificationCount">3</b></button>
+          <div class="profile"><div class="avatar">SD</div><div><strong>Admin</strong><span>Administrator</span></div></div>
+        </div>
+      </header>
+
+      <div class="content">
+        <!-- DASHBOARD -->
+        <section id="dashboard" class="section active">
+          <div class="stats-grid">
+            <div class="stat-card"><div class="stat-icon pink"><i class="fa-solid fa-box"></i></div><div><span>Total Shipments</span><strong id="statShipments">0</strong><small><i class="fa-solid fa-arrow-up"></i> This month</small></div></div>
+            <div class="stat-card"><div class="stat-icon blue"><i class="fa-solid fa-truck-fast"></i></div><div><span>In Transit</span><strong id="statTransit">0</strong><small>Currently moving</small></div></div>
+            <div class="stat-card"><div class="stat-icon green"><i class="fa-solid fa-circle-check"></i></div><div><span>Delivered</span><strong id="statDelivered">0</strong><small>Successfully delivered</small></div></div>
+            <div class="stat-card"><div class="stat-icon orange"><i class="fa-solid fa-indian-rupee-sign"></i></div><div><span>Revenue</span><strong id="statRevenue">₹0</strong><small>This month</small></div></div>
+          </div>
+          <div class="dashboard-grid">
+            <div class="card">
+              <div class="card-head"><div><h3>Shipment Overview</h3><p>Current shipment status</p></div><button class="btn btn-light" onclick="showSection('reports')">View Reports</button></div>
+              <div class="mini-chart" id="shipmentChart"></div>
+              <div class="legend">
+                <span><i class="dot pending"></i>Pending</span><span><i class="dot transit"></i>In Transit</span><span><i class="dot delivery"></i>Out for Delivery</span><span><i class="dot delivered"></i>Delivered</span>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-head"><div><h3>Quick Actions</h3><p>Frequently used actions</p></div></div>
+              <div class="quick-actions">
+                <button onclick="openBookingModal()"><i class="fa-solid fa-plus"></i><span>New Booking</span></button>
+                <button onclick="showSection('tracking')"><i class="fa-solid fa-location-crosshairs"></i><span>Track Parcel</span></button>
+                <button onclick="showSection('billing')"><i class="fa-solid fa-receipt"></i><span>Create Invoice</span></button>
+                <button onclick="showSection('reports')"><i class="fa-solid fa-download"></i><span>Export Report</span></button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><div><h3>Recent Bookings</h3><p>Latest courier bookings</p></div><button class="btn btn-outline" onclick="showSection('bookings')">View All</button></div>
+            <div class="table-wrap"><table><thead><tr><th>Tracking No.</th><th>Sender</th><th>Receiver</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead><tbody id="recentBookings"></tbody></table></div>
+          </div>
+        </section>
+
+        <!-- BOOKINGS -->
+        <section id="bookings" class="section">
+          <div class="section-toolbar"><div><h3>Booking Management</h3><p>Create, edit, search and manage courier bookings.</p></div><button class="btn btn-primary" onclick="openBookingModal()"><i class="fa-solid fa-plus"></i> New Booking</button></div>
+          <div class="card">
+            <div class="filters"><div class="search"><i class="fa-solid fa-search"></i><input id="bookingSearch" placeholder="Search tracking, sender or receiver..."></div><select id="bookingStatusFilter"><option value="">All Status</option><option>Pending</option><option>In Transit</option><option>Out for Delivery</option><option>Delivered</option><option>Cancelled</option></select></div>
+            <div class="table-wrap"><table><thead><tr><th>Tracking No.</th><th>Sender</th><th>Receiver</th><th>Weight</th><th>Amount</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead><tbody id="bookingTable"></tbody></table></div>
+          </div>
+        </section>
+
+        <!-- TRACKING -->
+        <section id="tracking" class="section">
+          <div class="section-toolbar"><div><h3>Shipment Tracking</h3><p>Track a shipment using its tracking number.</p></div></div>
+          <div class="card tracking-search"><div class="search large"><i class="fa-solid fa-location-dot"></i><input id="trackingInput" placeholder="Enter tracking number e.g. CR-2026-001"><button class="btn btn-primary" onclick="trackShipment()">Track</button></div></div>
+          <div id="trackingResult"></div>
+        </section>
+
+        <!-- PERSONNEL -->
+        <section id="personnel" class="section">
+          <div class="section-toolbar"><div><h3>Delivery Personnel</h3><p>Manage delivery staff and assigned deliveries.</p></div><button class="btn btn-primary" onclick="openPersonnelModal()"><i class="fa-solid fa-plus"></i> Add Personnel</button></div>
+          <div class="card"><div class="table-wrap"><table><thead><tr><th>Name</th><th>Contact</th><th>Vehicle</th><th>Assigned Route</th><th>Status</th><th>Actions</th></tr></thead><tbody id="personnelTable"></tbody></table></div></div>
+        </section>
+
+        <!-- ROUTES -->
+        <section id="routes" class="section">
+          <div class="section-toolbar"><div><h3>Route Management</h3><p>Plan and manage delivery routes.</p></div><button class="btn btn-primary" onclick="openRouteModal()"><i class="fa-solid fa-plus"></i> Add Route</button></div>
+          <div id="routeCards" class="route-grid"></div>
+        </section>
+
+        <!-- BILLING -->
+        <section id="billing" class="section">
+          <div class="section-toolbar"><div><h3>Billing & Invoicing</h3><p>Generate invoices and track payment status.</p></div><button class="btn btn-primary" onclick="generateInvoice()"><i class="fa-solid fa-file-invoice"></i> Generate Invoice</button></div>
+          <div class="stats-grid billing-stats">
+            <div class="stat-card"><div class="stat-icon pink"><i class="fa-solid fa-indian-rupee-sign"></i></div><div><span>Total Billed</span><strong id="totalBilled">₹0</strong></div></div>
+            <div class="stat-card"><div class="stat-icon green"><i class="fa-solid fa-check"></i></div><div><span>Paid</span><strong id="totalPaid">₹0</strong></div></div>
+            <div class="stat-card"><div class="stat-icon orange"><i class="fa-solid fa-clock"></i></div><div><span>Pending</span><strong id="totalPending">₹0</strong></div></div>
+          </div>
+          <div class="card"><div class="table-wrap"><table><thead><tr><th>Invoice</th><th>Booking</th><th>Customer</th><th>Amount</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead><tbody id="invoiceTable"></tbody></table></div></div>
+        </section>
+
+        <!-- CUSTOMERS -->
+        <section id="customers" class="section">
+          <div class="section-toolbar"><div><h3>Customer Management</h3><p>Manage customer profiles and delivery history.</p></div><button class="btn btn-primary" onclick="openCustomerModal()"><i class="fa-solid fa-user-plus"></i> Add Customer</button></div>
+          <div class="card"><div class="filters"><div class="search"><i class="fa-solid fa-search"></i><input id="customerSearch" placeholder="Search customer..."></div></div><div id="customerCards" class="customer-grid"></div></div>
+        </section>
+
+        <!-- REPORTS -->
+        <section id="reports" class="section">
+          <div class="section-toolbar"><div><h3>Reports & Analytics</h3><p>Courier performance and revenue insights.</p></div><div><button class="btn btn-outline" onclick="exportCSV()"><i class="fa-solid fa-file-csv"></i> Export CSV</button><button class="btn btn-primary" onclick="window.print()"><i class="fa-solid fa-print"></i> Print</button></div></div>
+          <div class="report-grid">
+            <div class="card"><div class="card-head"><div><h3>Status Distribution</h3><p>All current shipments</p></div></div><div id="statusReport"></div></div>
+            <div class="card"><div class="card-head"><div><h3>Performance Summary</h3><p>System-wide metrics</p></div></div><div id="performanceReport" class="performance-list"></div></div>
+          </div>
+          <div class="card"><div class="card-head"><div><h3>Shipment Report</h3><p>Detailed shipment information</p></div></div><div class="table-wrap"><table><thead><tr><th>Tracking</th><th>Sender</th><th>Receiver</th><th>Status</th><th>Amount</th><th>Date</th></tr></thead><tbody id="reportTable"></tbody></table></div></div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- MODALS -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal" id="modalBox"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
